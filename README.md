@@ -1,33 +1,38 @@
-# Dataset and Baseline Materials for API‑Discovery‑Based‑on‑Path‑Tree‑Local‑Clustering
+# api-discovery-path-tree-local-clustering
 
-Supporting materials for the paper **API Discovery Method Based on Local Clustering in Path Tree**.
+本仓库为论文 **基于路径树局部聚类的API发现方法** 的配套材料。
 
-> Due to commercial confidentiality restrictions, **the core source‑code implementation of the proposed algorithm is NOT released**.
+> 受商业保密协议约束，**本文提出算法的核心实现代码暂不公开**。
 
-## Brief Introduction
-Runtime traffic‑driven API discovery faces three key difficulties: distinguishing dynamic parameters from fixed business fields, confusing structurally‑similar interfaces, and high computational overhead caused by global clustering.
+## 方法简介
+流量驱动API发现存在3个难点：动态参数与固定业务字段难以区分、结构相近接口容易混淆、全局聚类计算开销大。
 
-This paper proposes an API discovery method based on path‑tree local clustering. The path tree is built for hierarchical division of HTTP requests. On leaf‑node local regions, an attribute similarity graph is constructed, and similarity‑constrained density clustering is performed to obtain semantic request clusters. A two‑level generalization mechanism is adopted: rule‑driven pre‑generalization and secondary generalization according to intra‑cluster path‑fragment change rate, to generate final API path templates.
+基于路径树局部聚类的API发现方法：构建路径树完成HTTP请求层级划分；在叶节点局部区域构建属性相似图，执行相似度约束密度聚类得到语义请求簇；采用两级泛化机制：规则预泛化 + 依据簇内路径片段变化率二次泛化，生成API路径模板。
 
-Experiments are conducted on public ATRDF dataset. The proposed method outperforms Speculator, MRG and HRAL in Precision, Recall and F1‑score. Ablation experiments verify the effectiveness of each key component.
+## 方法实现说明
+本文路径树模块基于开源项目 **Drain3** 改造实现：
+https://github.com/logpai/Drain3
 
-## Dataset
-We adopt public dataset **ATRDF(API Traffic Research Dataset Framework)**.
-- Official address: https://github.com/ArielCyber/Cisco_Ariel_Uni_API_security_challenge
-- In this paper, only normal business HTTP requests (108 252 samples) are adopted for evaluation; malicious attack traffic and static resource requests (CSS, JS, images) are discarded, malformed incomplete HTTP transactions are filtered out. Original URL paths are preserved for intra‑cluster path‑fragment change‑rate statistics.
+局部密度聚类模块采用 **scikit-learn** 库内置的 DBSCAN 算法。
+将预先计算得到的HTTP请求属性相似度矩阵输入DBSCAN；聚类仅在路径树每个叶节点的局部样本上执行，不对全部流量样本全局聚类，以此降低计算开销。
 
-## Baseline Methods
-Three traffic‑driven API discovery baselines are compared in our paper. All baselines run with identical input traffic samples, parameters follow original papers or official repository default settings.
+## 数据集
+实验采用公开数据集 **ATRDF（API Traffic Research Dataset Framework）**
+- 数据集官方地址：https://github.com/ArielCyber/Cisco_Ariel_Uni_API_security_challenge
+- 论文实验处理方式：剔除CSS、JS、图片等静态资源请求，过滤格式异常残缺HTTP报文，丢弃全部恶意攻击流量；仅保留正常业务HTTP流量共108252条样本，保留原始完整URL路径，用于簇内路径片段变化率统计。
+
+## 基线对比方法
+论文对比3种流量驱动API发现基线，所有基线算法输入完全相同流量样本。
 
 1. Speculator
-Repository: https://github.com/openclarity/speculator
+开源仓库：https://github.com/openclarity/speculator
 
 2. MRG
-Paper: https://arxiv.org/abs/2604.19471
+论文地址：https://arxiv.org/abs/2604.19471
 
 3. HRAL
-Paper: https://arxiv.org/abs/2607.02442
+论文地址：https://arxiv.org/abs/2607.02442
 
-## Citation
-If you refer to materials in this repository, please cite this paper：
+## 引用
+如果参考本仓库资料，请引用论文：
 > todo
